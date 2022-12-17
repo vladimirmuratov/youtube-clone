@@ -1,0 +1,75 @@
+<template>
+  <div
+      :class="classes"
+      tabindex="-1"
+      @keydown.esc="close"
+  >
+
+    <transition
+        appear
+        enter-active-class="ease-out duration-200"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="ease-in duration-100"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0"
+    >
+      <BaseModalOverlay v-if="isOpen" @click="close"/>
+    </transition>
+
+    <div v-if="isOpen" class="relative bg-white w-full sm:w-2/3 m-8 flex flex-col" style="max-height: calc(100vh - 64px)">
+      <div class="p-2 text-right">
+        <BaseModalButtonClose v-if="withCloseButton" @click="close"/>
+      </div>
+      <div class="p-6 overflow-auto">
+        <slot/>
+      </div>
+      <div v-if="$slots.footer" class="flex border-t border-gray-300 py-2">
+        <slot name="footer" :close="close"/>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import BaseIcon from "./BaseIcon.vue";
+import BaseModalButtonClose from "./BaseModalButtonClose.vue";
+import BaseModalOverlay from "./BaseModalOverlay.vue";
+
+export default {
+  emits: ['close'],
+
+  props: {
+    withCloseButton: Boolean
+  },
+
+  data() {
+    return {
+      isOpen: true,
+      classes: [
+        'flex',
+        'justify-center',
+        'items-start',
+        'fixed',
+        'inset-0',
+        'z-30',
+        'focus:outline-none',
+        'mx-auto'
+      ]
+    }
+  },
+
+  mounted() {
+    this.$el.focus()
+  },
+
+  methods: {
+    close() {
+      this.isOpen = false
+      setTimeout(() => this.$emit('close'), 100)
+    }
+  },
+
+  components: {BaseModalOverlay, BaseModalButtonClose, BaseIcon}
+}
+</script>

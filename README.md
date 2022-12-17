@@ -4,4 +4,4 @@
 
 ## frontend: Vue3
 
-## deploy:
+## deploy: https://youtube-clone-three-henna.vercel.app/#
